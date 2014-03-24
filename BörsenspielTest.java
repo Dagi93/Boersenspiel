@@ -1,9 +1,28 @@
-/** TO DO**
- * 
- * @author Dagi: - ShareDepositAccount.toString fertigstellen
- *               - In den ToString-Methoden den Wert immer durch 100 teilen und als double casten, damit eine authentische Ausgabe entsteht
+/**TO DO
  *
- */
+ *AccountManager:
+ * - Methode    void   newPlayer(String name)
+ * - Methode    void   buy(String PlayerName, String shareName, int amount)
+ * - Methode    void   sell(String PlayerName, String shareName, int amount) 
+ * - Methode    long   getAssetValue(Asset asset)
+ * - Methode    long   getPlayerAllAssets(Player player)
+ * - Methode    long   getShareValue(Share share)
+ * - Methode    String allSharesToString()
+ * 
+ * - neue Klasse AccountManagerImpl
+ * 
+ * AccountManagerImpl:
+ * - neues Array mit Aktien
+ * 
+ * Sonstiges:
+ * - Eindeutigkeit von Spielernamen, Aktiennamen etc. gewährleisten können
+ * - Sequenzdiagramm für buy-Methode erstellen
+ * 
+ * 
+ * 
+ * */
+
+
 public class BörsenspielTest {
 
     public static void main(String[] args) {
