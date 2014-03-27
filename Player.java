@@ -9,6 +9,7 @@ public class Player {
         this.sAcc = new ShareDepositAccount(name);
     }
     
+    
     public void buy(int amount, Share share) {
         ShareItem item = new ShareItem(share, amount);
 

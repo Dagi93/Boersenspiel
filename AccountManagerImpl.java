@@ -4,14 +4,34 @@ public class AccountManagerImpl implements AccountManager{
 
     @Override
     public void newPlayer(String name) {
-        // TODO Auto-generated method stub
+        Player bob = new Player (name);
         
     }
 
     @Override
-    public void buy(String PlayerName, String shareName, int amount) {
-        // TODO Auto-generated method stub
-        
+    public void buy(Player bob, String shareName, int amount) {
+        ShareItem item = new ShareItem(shareName, amount);
+        CashAccount cAcc = bob.
+
+        if (cAcc.getValue() >= item.getValue()) {
+            cAcc.setValue(-(item.getValue()));
+        } else {
+            System.out.println("Not enough money!");
+            return;
+        }
+
+        if (sAcc.search(sAcc.getCollection(), share) == -1) {
+            /**
+             * Wenn das neue Aktienpaket noch nicht im Aktiendepot des Spielers
+             * ist.
+             */
+            ShareItem[] temp = sAcc.newArray(sAcc.getCollection());
+            sAcc.setCollection(sAcc.copy(sAcc.getCollection(), temp, item));
+        } else {
+            /** Sonst wird das vorhandene Aktienpaket aktualisiert. */
+            sAcc.setCollection(sAcc.search(sAcc.getCollection(), share), item);
+        }
+
     }
 
     @Override
