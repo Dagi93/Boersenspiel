@@ -9,6 +9,13 @@ public class Player {
         this.sAcc = new ShareDepositAccount(name);
     }
     
+    public CashAccount getCAcc(){
+        return cAcc;
+    }
+    
+    public ShareDepositAccount getSAcc(){
+        return sAcc;
+    }
     
     public void buy(int amount, Share share) {
         ShareItem item = new ShareItem(share, amount);

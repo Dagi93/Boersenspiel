@@ -47,6 +47,9 @@ public class ShareDepositAccount extends Asset {
         }
         return -1;
     }
+    
+
+
 
     /** Erstellt ein neues Array, das um einen Index größer ist als das alte */
     public ShareItem[] newArray(ShareItem[] oldArray) {
