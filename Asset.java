@@ -7,7 +7,7 @@ public abstract class Asset {
 	}
 
 	public long getValue() {
-		return this.value;
+		return value;
 	}
 
     public void setValue(long difference) {
