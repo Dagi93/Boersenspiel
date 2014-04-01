@@ -86,9 +86,21 @@ public class AccountManagerImpl implements AccountManager{
     }
 
     @Override
-    public long getAssetValue(Asset asset) {
-        // TODO Auto-generated method stub
-        return 0;
+    public long getCashValueOf(Player bob) {
+        return bob.getCAcc().getValue();
+    }
+
+    @Override
+    public long getSharesValueOf(Player bob) {
+        ShareItem[] temp = bob.getSAcc().collection;
+        long value = 0;
+        
+        for(int index = 0; index < temp.length; index++){
+                int foundIndex = search(shareCollection, temp[index].getName());
+                value += shareCollection[foundIndex].getValue() * temp[index].getSAmount();
+            
+        }
+        return value;
     }
 
     @Override
@@ -98,15 +110,15 @@ public class AccountManagerImpl implements AccountManager{
     }
 
     @Override
-    public long getShareValue(Share share) {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    @Override
     public String allSharesToString() {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public long getShareValue(Share share) {
+        // TODO Auto-generated method stub
+        return 0;
     }
     
     
