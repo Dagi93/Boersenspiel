@@ -6,11 +6,28 @@ public class AccountManagerImpl implements AccountManager{
     Share temp = new Share(0, "temp");
     ShareItem item = new ShareItem(temp, 5);
 
+    
+    AccountManagerImpl(){
+        shareCollection = new Share[10];
+        shareCollection[0] = new Share(1000, "bmw");
+        shareCollection[1] = new Share(500, "siemens");
+        shareCollection[2] = new Share(100, "nokia");
+        shareCollection[3] = new Share(4900, "audi");
+        shareCollection[4] = new Share(8900, "vw");
+        shareCollection[5] = new Share(4560, "sony");
+        shareCollection[6] = new Share(1542, "lenovo");
+        shareCollection[7] = new Share(1212, "microsoft");
+        shareCollection[8] = new Share(6666, "apple");
+        shareCollection[9] = new Share(5000, "hugo boss");
+        
+    }
+    
+    
     @Override
     public void newPlayer(String name) {
         Player bob = new Player (name);
         if ((search(gambler, name)) == -1){
-        	copy(gambler, newPlayerArray(gambler), bob);
+        	gambler = copy(gambler, newPlayerArray(gambler), bob);
         }else{
         	System.out.println("Dieser Spieler existiert bereits!");
         }
@@ -100,12 +117,17 @@ public class AccountManagerImpl implements AccountManager{
         ShareItem[] temp = bob.getSAcc().collection;
         long value = 0;
         
-        for(int index = 0; index < temp.length; index++){
+        if (temp.length > 0){
+        for (int index = 0; index < temp.length; index++){
                 int foundIndex = search(shareCollection, temp[index].getName());
                 value += shareCollection[foundIndex].getValue() * temp[index].getSAmount();
             
         }
         return value;
+        } else {
+            System.out.println("Dieser Spieler besitzt keine Aktien!");
+            return 0;
+        }
     }
 
     @Override
