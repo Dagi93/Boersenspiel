@@ -9,6 +9,11 @@ public class AccountManagerImpl implements AccountManager{
     @Override
     public void newPlayer(String name) {
         Player bob = new Player (name);
+        if ((search(gambler, name)) == -1){
+        	copy(gambler, newPlayerArray(gambler), bob);
+        }else{
+        	System.out.println("Dieser Spieler existiert bereits!");
+        }
         
     }
 
@@ -151,5 +156,20 @@ public class AccountManagerImpl implements AccountManager{
         }
     }
     
+    public Player[] newPlayerArray(Player[] oldPlayerArray) {
+        Player[] newPlayerArray = new Player[oldPlayerArray.length + 1];
+        return newPlayerArray;
+    }
+    
+    public Player[] copy(Player[] gambler, Player[] newPlayerArray, Player bob) {
+        for (int index = 0; index < newPlayerArray.length; index++) {
+            if (index != newPlayerArray.length - 1) {
+                newPlayerArray[index] = gambler[index];
+            } else {
+                newPlayerArray[index] = bob;
+            }
+        }
+        return newPlayerArray;
+    }
     
 }
