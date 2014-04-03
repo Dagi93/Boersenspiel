@@ -20,9 +20,15 @@ public class BörsenspielTest {
         AccountManagerImpl accMan = new AccountManagerImpl();
         accMan.newPlayer("Bob");
         accMan.newPlayer("Betty");
+        accMan.newPlayer("Bob");
         
-        System.out.println(accMan.gambler[1].name);
-        
+        accMan.buy("Bob", "bmw", 100);
+        System.out.println(accMan.gambler[0].toString());
+        accMan.sell("Bob", "bmw", 10);
+        System.out.println(accMan.gambler[0].toString());
+        System.out.println("Gesamtwert aller Aktien: " + (double)accMan.getSharesValueOf("Bob")/100);
+        System.out.println(accMan.allSharesToString());
+        System.out.println("Gesamtwert aller Assets: " + (double)accMan.getPlayerAllAssets("Bob")/100);
     }
 
 }
