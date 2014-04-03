@@ -134,18 +134,29 @@ public class AccountManagerImpl implements AccountManager{
         }
     }
 
+<<<<<<< HEAD
     public long getPlayerAllAssets(String playerName) {
         return getSharesValueOf(playerName) + getCashValueOf(playerName);
+=======
+    @Override
+    public long getPlayerAllAssets(Player bob) {
+        return (bob.getCAcc().getValue()) + (bob.getSAcc().getValue());
+>>>>>>> c61ec3d285fb75fa2f11445d1dacca5de913778e
     }
 
     @Override
     public String allSharesToString() {
+<<<<<<< HEAD
         String allShares = new String("Verfügbare Aktien (aktueller Wert in Klammern): ");
         for(int index = 0; index < shareCollection.length; index++){
             allShares += shareCollection[index].getName() + " (" + (double)shareCollection[index].getValue()/100 + "€), ";
             
         }
         return allShares;
+=======
+        
+        return null;
+>>>>>>> c61ec3d285fb75fa2f11445d1dacca5de913778e
     }
 
     @Override
