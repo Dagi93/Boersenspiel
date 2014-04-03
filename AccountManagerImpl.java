@@ -1,10 +1,11 @@
-
-public class AccountManagerImpl implements AccountManager{
+public class AccountManagerImpl implements AccountManager {
+    
     Share[] shareCollection = new Share[0];
     Player[] gambler = new Player[0];
 
     
-    AccountManagerImpl(){
+    AccountManagerImpl() {
+        
         shareCollection = new Share[10];
         shareCollection[0] = new Share(1000, "bmw");
         shareCollection[1] = new Share(500, "siemens");
@@ -16,43 +17,28 @@ public class AccountManagerImpl implements AccountManager{
         shareCollection[7] = new Share(1212, "microsoft");
         shareCollection[8] = new Share(6666, "apple");
         shareCollection[9] = new Share(5000, "hugo boss");
-        
-    }
-    
-    
-    @Override
-    public void newPlayer(String name) {
-        Player bob = new Player (name);
-        if ((search(gambler, name)) == null){
-        	gambler = copy(gambler, newPlayerArray(gambler), bob);
-        }else{
-        	System.out.println("Dieser Spieler existiert bereits!");
-        }
-        
+
     }
 
-    
+    public void newPlayer(String name) {
+        
+        Player bob = new Player(name);
+        if ((search(gambler, name)) == null) {
+            gambler = copy(gambler, newPlayerArray(gambler), bob);
+        } else {
+            System.out.println("Dieser Spieler existiert bereits!");
+        }
+
+    }
+
     public void buy(String playerName, String shareName, int amount) {
-        //
-        // Player bob = search(this.gambler, playerName);
-        // // searchPlayerShare(index, bob, temp, item, shareName, amount);
-        //
-        // if(bob.getSAcc().search(bob.getSAcc().collection, temp) == null){
-        // ShareItem[] temp2 =
-        // bob.getSAcc().newArray(bob.getSAcc().getCollection());
-        // bob.getSAcc().setCollection(bob.getSAcc().copy(bob.getSAcc().getCollection(),
-        // temp2, item));
-        // }else{
-        // bob.getSAcc().setCollection(bob.getSAcc().search(bob.getSAcc().getCollection(),
-        // temp), item);
-        // }
 
         Player bob = search(this.gambler, playerName);
         Share share = search(this.shareCollection, shareName);
         ShareItem temp = new ShareItem(share, amount);
 
         if (temp.getSAmount() * share.getValue() <= bob.getCAcc().getValue()) {
-            
+
             if (bob != null && share != null) {
                 if (!bob.getSAcc().search(bob.getSAcc().collection, share)) {
                     bob.getSAcc().expandCollection(bob, temp);
@@ -64,22 +50,22 @@ public class AccountManagerImpl implements AccountManager{
                     }
                 }
                 bob.getCAcc().setValue(-(amount * share.getValue()));
-            }else{
+            } else {
                 System.out.println("Spieler- oder Aktienname nicht gefunden.");
             }
 
-        }else{
+        } else {
             System.out.println(playerName + " besitzt nicht genügend Geld um " + amount + " " + shareName + "-Aktien zu kaufen.");
         }
 
     }
 
-    @Override
     public void sell(String playerName, String shareName, int amount) {
+
         Player bob = search(this.gambler, playerName);
         Share temp = search(shareCollection, shareName);
         ShareItem item = new ShareItem(temp, amount);
-        
+
         if (temp != null && bob != null) {
 
             /**
@@ -87,79 +73,72 @@ public class AccountManagerImpl implements AccountManager{
              * Aktien verkauft, kann die buy-Methode umgekehrt werden.
              */
             if (search(bob.getSAcc().collection, temp.getName()).getSAmount() > amount) {
-                buy(bob.name, temp.getName(),-amount);
-            }else if (search(bob.getSAcc().collection, temp.getName()).getSAmount() == amount){
-                buy(bob.name, temp.getName(),-amount);
+                buy(bob.name, temp.getName(), -amount);
+            } else if (search(bob.getSAcc().collection, temp.getName()).getSAmount() == amount) {
+                buy(bob.name, temp.getName(), -amount);
                 bob.getSAcc().shortenCollection(bob, item);
-            }else{
+            } else {
                 System.out.println("Der Spieler besitzt nicht genügend Aktien.");
             }
-        
-            
-            
-            
-        }else{
+
+        } else {
             System.out.println("Spieler- oder Aktienname nicht gefunden.");
         }
-    }     
-    
-
-    @Override
-    public long getCashValueOf(String playerName) {
-        Player bob = search(gambler, playerName);
-                if(bob != null){
-        return bob.getCAcc().getValue();
-                }else{
-                    System.out.println("Dieser Spieler existiert nicht.");
-                    return 0;
-                }
     }
 
-    @Override
+    public long getCashValueOf(String playerName) {
+        
+        Player bob = search(gambler, playerName);
+        if (bob != null) {
+            return bob.getCAcc().getValue();
+        } else {
+            System.out.println("Dieser Spieler existiert nicht.");
+            return 0;
+        }
+    }
+
     public long getSharesValueOf(String playerName) {
+
         Player bob = search(gambler, playerName);
         ShareItem[] siTemp = bob.getSAcc().collection;
         long value = 0;
-        
-        if (siTemp.length > 0){
-        for (int index = 0; index < siTemp.length; index++){
+
+        if (siTemp.length > 0) {
+            for (int index = 0; index < siTemp.length; index++) {
                 ShareItem sTemp = siTemp[index];
-                value += search(shareCollection, sTemp.getName()).getValue()*siTemp[index].getSAmount();
-            
-        }
-        return value;
+                value += search(shareCollection, sTemp.getName()).getValue() * siTemp[index].getSAmount();
+
+            }
+            return value;
         } else {
             System.out.println("Dieser Spieler besitzt keine Aktien!");
             return 0;
         }
     }
 
-
-
-    @Override
     public long getPlayerAllAssets(String playerName) {
+        
         Player bob = search(gambler, playerName);
         return (bob.getCAcc().getValue()) + (bob.getSAcc().getValue());
     }
 
-    @Override
     public String allSharesToString() {
+        
         String allShares = new String("Verfügbare Aktien (aktueller Wert in Klammern): ");
-        for(int index = 0; index < shareCollection.length; index++){
-            allShares += shareCollection[index].getName() + " (" + (double)shareCollection[index].getValue()/100 + "€), ";
-            
+        for (int index = 0; index < shareCollection.length; index++) {
+            allShares += shareCollection[index].getName() + " (" + (double) shareCollection[index].getValue() / 100 + "€), ";
+
         }
         return allShares;
-        
+
     }
 
-    @Override
     public long getShareValue(String shareName) {
+        
         Share temp = search(shareCollection, shareName);
         return temp.getValue();
     }
-    
-    
+
     public Player search(Player[] gambler, String name) {
 
         if (gambler.length > 0) {
@@ -171,52 +150,39 @@ public class AccountManagerImpl implements AccountManager{
         }
         return null;
     }
-    
+
     public Share search(Share[] collection, String shareName) {
 
         if (collection.length > 0) {
             for (int index = 0; index < collection.length; index++) {
                 if (collection[index].getName().equals(shareName)) {
                     return collection[index];
-                } 
+                }
             }
         }
         return null;
     }
-    
+
     public ShareItem search(ShareItem[] collection, String shareName) {
 
         if (collection.length > 0) {
             for (int index = 0; index < collection.length; index++) {
                 if (collection[index].getName().equals(shareName)) {
                     return collection[index];
-                } 
+                }
             }
         }
         return null;
     }
-    
-//    public void searchPlayerShare(Player bob, Share temp, ShareItem item, String shareName, int amount){
-//        if (bob == null){
-//            System.out.println("Dieser Spieler ist kein Kunde unserer Bank.");
-//            return;
-//        }
-//
-//        if(search(shareCollection, shareName) > 0){
-//            temp = shareCollection[search(shareCollection, shareName)];
-//            item = new ShareItem(temp, amount);
-//        }else{
-//            System.out.println("Diese Aktie existiert nicht.");
-//            return;
-//        }
-//    }
-    
+
     public Player[] newPlayerArray(Player[] oldPlayerArray) {
+        
         Player[] newPlayerArray = new Player[oldPlayerArray.length + 1];
         return newPlayerArray;
     }
-    
+
     public Player[] copy(Player[] gambler, Player[] newPlayerArray, Player bob) {
+        
         for (int index = 0; index < newPlayerArray.length; index++) {
             if (index != newPlayerArray.length - 1) {
                 newPlayerArray[index] = gambler[index];
@@ -226,5 +192,5 @@ public class AccountManagerImpl implements AccountManager{
         }
         return newPlayerArray;
     }
-    
+
 }
