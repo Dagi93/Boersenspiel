@@ -131,14 +131,13 @@ public class AccountManagerImpl implements AccountManager{
     }
 
     @Override
-    public long getPlayerAllAssets(Player player) {
-        // TODO Auto-generated method stub
-        return 0;
+    public long getPlayerAllAssets(Player bob) {
+        return (bob.getCAcc().getValue()) + (bob.getSAcc().getValue());
     }
 
     @Override
     public String allSharesToString() {
-        // TODO Auto-generated method stub
+        
         return null;
     }
 
