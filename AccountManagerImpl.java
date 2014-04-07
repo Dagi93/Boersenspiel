@@ -102,7 +102,7 @@ public class AccountManagerImpl implements AccountManager {
         ShareItem[] siTemp = bob.getSAcc().collection;
         long value = 0;
 
-        if(bob != null){
+        if(bob.name != ""){
 
             if (siTemp.length > 0) {
                 for (int index = 0; index < siTemp.length; index++) {
