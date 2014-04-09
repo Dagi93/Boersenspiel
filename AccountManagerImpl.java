@@ -2,25 +2,24 @@
 
 public class AccountManagerImpl implements AccountManager {
     
-    Share[] shareCollection = new Share[0];
     Player[] gambler = new Player[0];
     NotEnoughException money = new NotEnoughException();
 
     
     AccountManagerImpl() {
         
-        shareCollection = new Share[11];
-        shareCollection[0] = new Share(1000, "bmw");
-        shareCollection[1] = new Share(500, "siemens");
-        shareCollection[2] = new Share(100, "nokia");
-        shareCollection[3] = new Share(4900, "audi");
-        shareCollection[4] = new Share(8900, "vw");
-        shareCollection[5] = new Share(4560, "sony");
-        shareCollection[6] = new Share(1542, "lenovo");
-        shareCollection[7] = new Share(1212, "microsoft");
-        shareCollection[8] = new Share(6666, "apple");
-        shareCollection[9] = new Share(5000, "hugo boss");
-        shareCollection[10] = new Share(3700, "kuka");
+//        shareCollection = new Share[11];
+//        shareCollection[0] = new Share(1000, "bmw");
+//        shareCollection[1] = new Share(500, "siemens");
+//        shareCollection[2] = new Share(100, "nokia");
+//        shareCollection[3] = new Share(4900, "audi");
+//        shareCollection[4] = new Share(8900, "vw");
+//        shareCollection[5] = new Share(4560, "sony");
+//        shareCollection[6] = new Share(1542, "lenovo");
+//        shareCollection[7] = new Share(1212, "microsoft");
+//        shareCollection[8] = new Share(6666, "apple");
+//        shareCollection[9] = new Share(5000, "hugo boss");
+//        shareCollection[10] = new Share(3700, "kuka");
 
     }
 
@@ -37,7 +36,7 @@ public class AccountManagerImpl implements AccountManager {
     public void buy(String playerName, String shareName, int amount) throws NotEnoughException {
 
         Player bob = search(this.gambler, playerName);
-        Share share = search(this.shareCollection, shareName);
+        Share share = search(ConstStockPriceProvider.shareCollection, shareName);
         ShareItem temp = new ShareItem(share, amount);
 
         if (bob != null && share != null) {
@@ -67,7 +66,7 @@ public class AccountManagerImpl implements AccountManager {
     public void sell(String playerName, String shareName, int amount) throws NotEnoughException {
 
         Player bob = search(this.gambler, playerName);
-        Share temp = search(shareCollection, shareName);
+        Share temp = search(ConstStockPriceProvider.shareCollection, shareName);
         ShareItem item = new ShareItem(temp, amount);
 
         if (temp != null && bob != null) {
@@ -107,7 +106,7 @@ public class AccountManagerImpl implements AccountManager {
             if (siTemp.length > 0) {
                 for (int index = 0; index < siTemp.length; index++) {
                     ShareItem sTemp = siTemp[index];
-                    value += search(shareCollection, sTemp.getName()).getValue() * siTemp[index].getSAmount();
+                    value += search(ConstStockPriceProvider.shareCollection, sTemp.getName()).getValue() * siTemp[index].getSAmount();
                 }
                 return value;
             } else {
@@ -128,8 +127,8 @@ public class AccountManagerImpl implements AccountManager {
     public String allSharesToString() {
         
         String allShares = new String("Verfügbare Aktien (aktueller Wert in Klammern): ");
-        for (int index = 0; index < shareCollection.length; index++) {
-            allShares += shareCollection[index].getName() + " (" + (double) shareCollection[index].getValue() / 100 + "€), ";
+        for (int index = 0; index < ConstStockPriceProvider.shareCollection.length; index++) {
+            allShares += ConstStockPriceProvider.shareCollection[index].getName() + " (" + (double) ConstStockPriceProvider.shareCollection[index].getValue() / 100 + "€), ";
 
         }
         return allShares;
@@ -138,7 +137,7 @@ public class AccountManagerImpl implements AccountManager {
 
     public long getShareValue(String shareName) {
 
-        Share temp = search(shareCollection, shareName);
+        Share temp = search(ConstStockPriceProvider.shareCollection, shareName);
         if (temp != null) {
             return temp.getValue();
         } else {
