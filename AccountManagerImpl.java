@@ -3,11 +3,13 @@
 public class AccountManagerImpl implements AccountManager {
     
     Player[] gambler = new Player[0];
-    StockPriceProvider prov = new RandomStockPriceProvider();
     NotEnoughException money = new NotEnoughException();
     Transaction lastTransaction;
+    StockPriceProvider provider;
 
-    
+    public AccountManagerImpl(StockPriceProvider provider){
+        this.provider = provider;
+    }
 
 
     public void newPlayer(String name) {
@@ -23,7 +25,7 @@ public class AccountManagerImpl implements AccountManager {
     public void buy(String playerName, String shareName, int amount) throws NotEnoughException {
 
         Player bob = search(this.gambler, playerName);
-        Share share = StockPriceProvider.search(ConstStockPriceProvider.shareCollection, shareName);
+        Share share = provider.search(StockPriceProvider.shareCollection, shareName);
         ShareItem temp = new ShareItem(share, amount);
 
         if (bob != null && share != null) {
@@ -54,7 +56,7 @@ public class AccountManagerImpl implements AccountManager {
     public void sell(String playerName, String shareName, int amount) throws NotEnoughException {
 
         Player bob = search(this.gambler, playerName);
-        Share temp = StockPriceProvider.search(ConstStockPriceProvider.shareCollection, shareName);
+        Share temp = provider.search(StockPriceProvider.shareCollection, shareName);
         ShareItem item = new ShareItem(temp, amount);
 
         if (temp != null && bob != null) {
@@ -95,7 +97,7 @@ public class AccountManagerImpl implements AccountManager {
             if (siTemp.length > 0) {
                 for (int index = 0; index < siTemp.length; index++) {
                     ShareItem sTemp = siTemp[index];
-                    value += StockPriceProvider.search(ConstStockPriceProvider.shareCollection, sTemp.getName()).getValue() * siTemp[index].getSAmount();
+                    value += provider.search(StockPriceProvider.shareCollection, sTemp.getName()).getValue() * siTemp[index].getSAmount();
                 }
                 return value;
             } else {

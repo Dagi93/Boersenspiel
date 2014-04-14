@@ -2,8 +2,12 @@
 public class StockGameLauncher {
 
     public static void main(String[] args) throws NotEnoughException {
-        AccountManagerImpl accMan = new AccountManagerImpl();
-        accMan.prov.startUpdate();
+        StockPriceProvider provider = new RandomStockPriceProvider();
+        provider.startUpdate();
+        AccountManagerImpl accMan = new AccountManagerImpl(provider);
+        Viewer view = new Viewer(provider);
+        view.start();
+        
         accMan.newPlayer("Max Muster");
         waitAWhile(3000);
         accMan.newPlayer("Maria Muster");

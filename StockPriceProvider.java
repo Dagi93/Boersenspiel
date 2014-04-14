@@ -1,3 +1,5 @@
+import java.util.TimerTask;
+
 
 public abstract class StockPriceProvider implements StockPriceInfo {
 
@@ -52,10 +54,16 @@ public abstract class StockPriceProvider implements StockPriceInfo {
     }
     
     public void startUpdate(){
-        gini.startTiming(this);
+
+        final Zeitgeist timer = Zeitgeist.getInstance();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            public void run() {
+                updateShareRates();
+            }
+        }, 2000, 1000);
     }
 
-    public static Share search(Share[] collection, String shareName) {
+    public Share search(Share[] collection, String shareName) {
 
         if (collection.length > 0) {
             for (int index = 0; index < collection.length; index++) {

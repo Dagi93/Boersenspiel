@@ -3,6 +3,7 @@ import java.awt.Font;
 import java.util.TimerTask;
 
 
+
 //import java.util.Timer;
 //import java.util.Calendar;
 //import java.util.Date;
@@ -12,7 +13,7 @@ import javax.swing.JLabel;
 
 public class Viewer extends JFrame {
     private JLabel clockLabel;
-    private StockPriceProvider prov = new RandomStockPriceProvider();
+    private StockPriceProvider provider;
     private Font font = new Font("font", 0, 24);
 
     public class TickerTask extends TimerTask {
@@ -24,13 +25,15 @@ public class Viewer extends JFrame {
 
         public String createText() {     
             String output = "<html><body>Aktienkurse:<br>";
-            output += prov.allSharesToString() + "</body></html>";
+            output += provider.allSharesToString() + "</body></html>";
             return output;
         }
     }
 
 
-    public Viewer() {
+    public Viewer(StockPriceProvider provider) {
+        this.provider = provider;
+        
         clockLabel = new JLabel("coming soon ...");
         clockLabel.setFont(font);
         clockLabel.setForeground(Color.BLUE);
@@ -42,9 +45,17 @@ public class Viewer extends JFrame {
     }
 
     public void start() {
-        TickerTask task = new TickerTask();
-        task.run();
-        task.createText();
+        final TickerTask task = new TickerTask();
+//        task.run();
+//        task.createText();
+        
+        final Zeitgeist timer = Zeitgeist.getInstance();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            public void run() {
+              task.run();
+              task.createText();
+            }
+        }, 2000, 1000);
     }
 
 }
