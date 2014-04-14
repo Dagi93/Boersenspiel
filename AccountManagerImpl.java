@@ -3,25 +3,12 @@
 public class AccountManagerImpl implements AccountManager {
     
     Player[] gambler = new Player[0];
+    StockPriceProvider prov = new RandomStockPriceProvider();
     NotEnoughException money = new NotEnoughException();
+    Transaction lastTransaction;
 
     
-    AccountManagerImpl() {
-        
-//        shareCollection = new Share[11];
-//        shareCollection[0] = new Share(1000, "bmw");
-//        shareCollection[1] = new Share(500, "siemens");
-//        shareCollection[2] = new Share(100, "nokia");
-//        shareCollection[3] = new Share(4900, "audi");
-//        shareCollection[4] = new Share(8900, "vw");
-//        shareCollection[5] = new Share(4560, "sony");
-//        shareCollection[6] = new Share(1542, "lenovo");
-//        shareCollection[7] = new Share(1212, "microsoft");
-//        shareCollection[8] = new Share(6666, "apple");
-//        shareCollection[9] = new Share(5000, "hugo boss");
-//        shareCollection[10] = new Share(3700, "kuka");
 
-    }
 
     public void newPlayer(String name) {
         
@@ -36,7 +23,7 @@ public class AccountManagerImpl implements AccountManager {
     public void buy(String playerName, String shareName, int amount) throws NotEnoughException {
 
         Player bob = search(this.gambler, playerName);
-        Share share = search(ConstStockPriceProvider.shareCollection, shareName);
+        Share share = StockPriceProvider.search(ConstStockPriceProvider.shareCollection, shareName);
         ShareItem temp = new ShareItem(share, amount);
 
         if (bob != null && share != null) {
@@ -52,6 +39,7 @@ public class AccountManagerImpl implements AccountManager {
                     }
                 }
                 bob.getCAcc().setValue(-(amount * share.getValue()));
+                lastTransaction = new Transaction(bob.name, temp);
             } else {
                 throw new NotEnoughException("Nicht genügend Geld.");
 //                System.out.println(playerName + " besitzt nicht genügend Geld um " + amount + " " + shareName + "-Aktien zu kaufen.");
@@ -66,7 +54,7 @@ public class AccountManagerImpl implements AccountManager {
     public void sell(String playerName, String shareName, int amount) throws NotEnoughException {
 
         Player bob = search(this.gambler, playerName);
-        Share temp = search(ConstStockPriceProvider.shareCollection, shareName);
+        Share temp = StockPriceProvider.search(ConstStockPriceProvider.shareCollection, shareName);
         ShareItem item = new ShareItem(temp, amount);
 
         if (temp != null && bob != null) {
@@ -76,6 +64,7 @@ public class AccountManagerImpl implements AccountManager {
             } else if (search(bob.getSAcc().collection, temp.getName()) != null && search(bob.getSAcc().collection, temp.getName()).getSAmount() == amount) {
                 buy(bob.name, temp.getName(), -amount);
                 bob.getSAcc().shortenCollection(bob, item);
+                lastTransaction = new Transaction(bob.name, item);
             } else {
                 throw new NotEnoughException("Der Spieler besitzt nicht genügend Aktien.");
             }
@@ -106,7 +95,7 @@ public class AccountManagerImpl implements AccountManager {
             if (siTemp.length > 0) {
                 for (int index = 0; index < siTemp.length; index++) {
                     ShareItem sTemp = siTemp[index];
-                    value += search(ConstStockPriceProvider.shareCollection, sTemp.getName()).getValue() * siTemp[index].getSAmount();
+                    value += StockPriceProvider.search(ConstStockPriceProvider.shareCollection, sTemp.getName()).getValue() * siTemp[index].getSAmount();
                 }
                 return value;
             } else {
@@ -124,27 +113,6 @@ public class AccountManagerImpl implements AccountManager {
         return (bob.getCAcc().getValue()) + (bob.getSAcc().getValue());
     }
 
-    public String allSharesToString() {
-        
-        String allShares = new String("Verfügbare Aktien (aktueller Wert in Klammern): ");
-        for (int index = 0; index < ConstStockPriceProvider.shareCollection.length; index++) {
-            allShares += ConstStockPriceProvider.shareCollection[index].getName() + " (" + (double) ConstStockPriceProvider.shareCollection[index].getValue() / 100 + "€), ";
-
-        }
-        return allShares;
-
-    }
-
-    public long getShareValue(String shareName) {
-
-        Share temp = search(ConstStockPriceProvider.shareCollection, shareName);
-        if (temp != null) {
-            return temp.getValue();
-        } else {
-            throw new NullPointerException("Aktie nicht im System.");
-        }
-    }
-
     public Player search(Player[] gambler, String name) {
 
         if (gambler.length > 0) {
@@ -155,18 +123,6 @@ public class AccountManagerImpl implements AccountManager {
             }
         }
         return null;
-    }
-
-    public Share search(Share[] collection, String shareName) {
-
-        if (collection.length > 0) {
-            for (int index = 0; index < collection.length; index++) {
-                if (collection[index].getName().equals(shareName)) {
-                    return collection[index];
-                }
-            }
-        }
-        throw new NullPointerException("Diese Aktie befindet sich nicht im System.");
     }
 
     public ShareItem search(ShareItem[] collection, String shareName) {

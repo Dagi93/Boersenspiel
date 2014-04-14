@@ -5,7 +5,7 @@
  * können
  * */
 
-public class BörsenspielTest {
+public class BörsenspielTest1 {
 
     public static void main(String[] args){
         AccountManagerImpl accMan = new AccountManagerImpl();
@@ -41,9 +41,7 @@ public class BörsenspielTest {
         
         System.out.println("Gesamtvermögen: " + (double)accMan.getPlayerAllAssets("Bob")/100);
         
-        System.out.println("bmw-Wert: " + (double)accMan.getShareValue("bmw")/100);
-        
-        System.out.println(accMan.allSharesToString());
+//        System.out.println("bmw-Wert: " + (double)accMan.getShareValue("bmw")/100);
         
         
         
