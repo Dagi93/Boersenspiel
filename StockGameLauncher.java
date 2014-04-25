@@ -1,5 +1,7 @@
 import java.io.IOException;
 
+import Exceptions.NotEnoughException;
+
 
 public class StockGameLauncher {
 

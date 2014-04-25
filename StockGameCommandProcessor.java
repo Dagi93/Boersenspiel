@@ -2,6 +2,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import Exceptions.NotEnoughException;
 
 public class StockGameCommandProcessor {
 
@@ -28,49 +32,101 @@ public class StockGameCommandProcessor {
 
             StockGameCommandType commandType =  (StockGameCommandType) command.getCommandType();
             
-            switch (commandType) {
-            case EXIT: {
-                System.exit(200);
+            try {
+                Class<?> paramsClass = Class.forName("AccountManagerImpl");
+                paramsClass.getClassLoader();
+                Object obj = paramsClass.newInstance();
+                Method method = obj.getClass().getDeclaredMethod(commandType.getName(), paramsClass);
+//                method.invoke(accMan, params);
+                
+            
+            } catch (NoSuchMethodException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (SecurityException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+//            } catch (IllegalAccessException e) {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace();
+            } catch (IllegalArgumentException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+//            } catch (InvocationTargetException e) {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
-
-            case HELP: {
-                for(int index = 0; index < StockGameCommandType.values().length; index++){
-                    System.out.println(StockGameCommandType.values()[index].toString());
-                }
-                break;
-            }
-
-            case CREATEPLAYER: {
-                try{
-                accMan.newPlayer(params[0].toString());
-                System.out.println("Created new player " + params[0].toString());
-                }catch(Exception e){
-                  //TODO: handle
-                }
-                break;
-            }
-
-            case BUYSHARE: {
-                try{
-                accMan.buy(params[0].toString(), params[1].toString(), (int) params[2]);
-                System.out.println(accMan.lastTransaction.toString());
-                } catch(NotEnoughException e){
-                    //TODO: handle
-                }
-                break;
-            }
-
-            case SELLSHARE: {
-                try{
-                accMan.sell(params[0].toString(), params[1].toString(), (int) params[2]);
-                System.out.println(accMan.lastTransaction.toString());
-                break;
-                }catch(NotEnoughException e){
-                  //TODO: handle
-                }
-
-            }
-            }
+            
+            
+            
+            
+            
+            
+            
+            
+            
+//            switch (commandType) {
+//            case EXIT: {
+//                System.exit(200);
+//            }
+//
+//            case HELP: {
+//                for(int index = 0; index < StockGameCommandType.values().length; index++){
+//                    System.out.println(StockGameCommandType.values()[index].toString());
+//                }
+//                break;
+//            }
+//
+//            case CREATEPLAYER: {
+//                try{
+//                accMan.newPlayer(params[0].toString());
+//                System.out.println("Created new player " + params[0].toString());
+//                }catch(Exception e){
+//                  //TODO: handle
+//                }
+//                break;
+//            }
+//
+//            case BUYSHARE: {
+//                try{
+//                accMan.buy(params[0].toString(), params[1].toString(), (int) params[2]);
+//                System.out.println(accMan.lastTransaction.toString());
+//                } catch(NotEnoughException e){
+//                    //TODO: handle
+//                }
+//                break;
+//            }
+//
+//            case SELLSHARE: {
+//                try{
+//                accMan.sell(params[0].toString(), params[1].toString(), (int) params[2]);
+//                System.out.println(accMan.lastTransaction.toString());
+//                break;
+//                }catch(NotEnoughException e){
+//                  System.out.println("Sie besitzen zu wenig Geld oder Aktien.");
+//                }catch(NullPointerException n){
+//                    System.out.println("Spieler- oder Aktienname nicht gefunden.");
+//                }
+//
+//            }
+//            case SHOWASSETS: {
+//                
+//            
+//                break;
+//            }
+//            default:
+//                System.out.println("Befehl nicht gefunden.");
+//                break;
+//            }
         }
     }
 }

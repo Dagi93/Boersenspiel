@@ -1,3 +1,5 @@
+import Exceptions.NotEnoughException;
+
 
 public interface AccountManager {
     void newPlayer(String name);

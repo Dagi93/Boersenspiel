@@ -5,8 +5,9 @@ public enum StockGameCommandType implements CommandTypeInfo{
     HELP         ("help", "                                    * list all commands"),
     EXIT         ("exit", "                                    * exit program"),
     CREATEPLAYER ("crp",  "  <name>                             * create a new player by name", String.class), 
-    BUYSHARE     ("bs",   "   <playername> <sharename> <amount>  * buy that amount of shares", String.class, String.class, int.class),
-    SELLSHARE    ("ss",   "   <playername> <sharename> <amount>  * buy that amount of shares", String.class, String.class, int.class)
+    BUYSHARE     ("buy",   "   <playername> <sharename> <amount>  * buy that amount of shares", String.class, String.class, int.class),
+    SELLSHARE    ("sell",   "   <playername> <sharename> <amount>  * sell that amount of shares", String.class, String.class, int.class),
+    SHOWASSETS   ("sa",   "")
     ;
 
     private String cmd;
@@ -42,5 +43,6 @@ public enum StockGameCommandType implements CommandTypeInfo{
     public String toString(){
         return getName() + " " + getHelpText();
     }
+
     
 }
