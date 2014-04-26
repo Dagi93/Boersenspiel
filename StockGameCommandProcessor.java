@@ -57,13 +57,13 @@ public class StockGameCommandProcessor {
                     if (params != null) {
                         for (int index = 0; index < params.length; index++) {
                             paramsClass[index] = params[index].getClass();
-                            System.out.println(paramsClass[index].toString());
                         }
                     }
 
                     Method method = Class.forName("AccountManagerImpl").getMethod(commandType.getName(), paramsClass);
 
                     Object test = method.invoke(accMan, params);
+                    if(test != null)
                     System.out.println(test);
 
                 } catch (SecurityException e) {

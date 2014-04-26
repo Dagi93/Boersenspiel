@@ -1,6 +1,7 @@
 
 public class ShareItem extends Asset {
 	private int sAmount;
+	private long purchaseValue = 0;
 
 	
 	/**Konstruktor*/
@@ -8,7 +9,6 @@ public class ShareItem extends Asset {
 	    this.setName(share.getName());
 	    this.setSAmount(amount);
 	    this.setValue(share.getValue()*amount);
-	    
 	}
 	
 	public int getSAmount() {
@@ -23,4 +23,15 @@ public class ShareItem extends Asset {
 	public String toString() {
 		return "Name: " + this.getName() + ", Menge: " + this.getSAmount() + ", Gesamtwert: " + (double)this.getValue()/100 + "€.";
 	}
+
+    public long getPurchaseValue() {
+        return purchaseValue;
+    }
+
+    public void setPurchaseValue(long purchaseValue) {
+        this.purchaseValue = purchaseValue;
+    }
+
+	
+	
 }

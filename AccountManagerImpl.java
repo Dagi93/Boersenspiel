@@ -15,7 +15,7 @@ public class AccountManagerImpl implements AccountManager {
     }
 
 
-    public void newPlayer(String name) {
+    public String newPlayer(String name) {
         
         Player bob = new Player(name);
         if ((search(gambler, name)) == null) {
@@ -23,9 +23,10 @@ public class AccountManagerImpl implements AccountManager {
         } else {
             throw new NameAlreadyTakenException("Dieser Spieler existiert bereits.");
         }
+        return "Spieler " + name + " wurde hinzugefügt.";
     }
 
-    public void buy(String playerName, String shareName, Integer amount) throws NotEnoughException {
+    public String buy(String playerName, String shareName, Integer amount) throws NotEnoughException {
 
         Player bob = search(this.gambler, playerName);
         Share share = provider.search(StockPriceProvider.shareCollection, shareName);
@@ -53,21 +54,22 @@ public class AccountManagerImpl implements AccountManager {
         } else {
             throw new NullPointerException("Spieler- oder Aktienname nicht gefunden.");
         }
+        return "Spieler " + playerName + " hat " + amount + " " + shareName + "-Aktien zum Preis von " + share.getValue() + " gekauft.";
 
     }
 
-    public void sell(String playerName, String shareName, Integer amount) throws NotEnoughException {
+    public String sell(String playerName, String shareName, Integer amount) throws NotEnoughException {
 
         Player bob = search(this.gambler, playerName);
-        Share temp = provider.search(StockPriceProvider.shareCollection, shareName);
-        ShareItem item = new ShareItem(temp, amount);
+        Share share = provider.search(StockPriceProvider.shareCollection, shareName);
+        ShareItem item = new ShareItem(share, amount);
 
-        if (temp != null && bob != null) {
+        if (share != null && bob != null) {
 
-            if (search(bob.getSAcc().collection, temp.getName()) != null && search(bob.getSAcc().collection, temp.getName()).getSAmount() > amount) {
-                buy(bob.name, temp.getName(), -amount);
-            } else if (search(bob.getSAcc().collection, temp.getName()) != null && search(bob.getSAcc().collection, temp.getName()).getSAmount() == amount) {
-                buy(bob.name, temp.getName(), -amount);
+            if (search(bob.getSAcc().collection, share.getName()) != null && search(bob.getSAcc().collection, share.getName()).getSAmount() > amount) {
+                buy(bob.name, share.getName(), -amount);
+            } else if (search(bob.getSAcc().collection, share.getName()) != null && search(bob.getSAcc().collection, share.getName()).getSAmount() == amount) {
+                buy(bob.name, share.getName(), -amount);
                 bob.getSAcc().shortenCollection(bob, item);
                 lastTransaction = new Transaction(bob.name, item);
             } else {
@@ -77,19 +79,20 @@ public class AccountManagerImpl implements AccountManager {
         } else {
             throw new NullPointerException("Spieler- oder Aktienname nicht gefunden.");
         }
+        return "Spieler " + playerName + " hat " + amount + " " + shareName + "-Aktien zum Preis von " + share.getValue() + " verkauft.";
     }
 
-    public long getCashValueOf(String playerName) {
+    public String getCashValueOf(String playerName) {
 
         Player bob = search(gambler, playerName);
         if (bob != null) {
-            return bob.getCAcc().getValue();
+            return "Spieler " + playerName + "'s Kontostand beträgt " + bob.getCAcc().getValue();
         } else {
             throw new NullPointerException("Dieser Spieler existiert nicht.");
         }
     }
 
-    public long getSharesValueOf(String playerName) throws NotEnoughException {
+    public String getSharesValueOf(String playerName) throws NotEnoughException {
 
         Player bob = search(gambler, playerName);
         ShareItem[] siTemp = bob.getSAcc().collection;
@@ -102,22 +105,41 @@ public class AccountManagerImpl implements AccountManager {
                     ShareItem sTemp = siTemp[index];
                     value += provider.search(StockPriceProvider.shareCollection, sTemp.getName()).getValue() * siTemp[index].getSAmount();
                 }
-                return value;
+                return "Spieler " + playerName + "'s Aktien haben einen Wert von " + value;
             } else {
                 throw new NotEnoughException("Dieser Spieler besitzt keine Aktien.");
             }
 
         } else {
-            throw new NullPointerException("Spieler- oder Aktienname nicht gefunden");
+            throw new NullPointerException("Spieler- oder Aktienname nicht gefunden.");
         }
     }
 
-    public long getPlayerAllAssets(String playerName) {
+    public String getAllAssetsOf(String playerName) {
         
         Player bob = search(gambler, playerName);
-        return (bob.getCAcc().getValue()) + (bob.getSAcc().getValue());
+        return  "Spieler " + playerName + "'s Gesamtvermögen beträgt" + (bob.getCAcc().getValue()) + (bob.getSAcc().getValue());
     }
-
+    
+    public String checkForProfit(String playerName, String shareName){
+        Player bob = search(gambler, playerName);
+        Share share = provider.search(StockPriceProvider.shareCollection, shareName);
+        long meanValue = 0;
+        
+        for(int index = 0; index < bob.getSAcc().getCollection().length; index++){
+            if(bob.getSAcc().getCollection()[index].getName().equals(share.getName())){
+                meanValue = bob.getSAcc().getCollection()[index].getValue()/bob.getSAcc().getCollection()[index].getSAmount();
+            }
+        }
+        
+        if(meanValue < share.getValue())        
+        return playerName + " macht Gewinn, wenn er/ sie " + shareName + "-Aktien mit mittlerem EInkaufspreis von " + meanValue + " zum Preis von " + share.getValue() + " verkauft.";
+        else        
+            return playerName + " macht KEINEN Gewinn, wenn er/ sie " + shareName + "-Aktien mit mittlerem EInkaufspreis von " + meanValue + " zum Preis von " + share.getValue() + " verkauft.";
+        
+        
+    }
+    
     public Player search(Player[] gambler, String name) {
 
         if (gambler.length > 0) {
