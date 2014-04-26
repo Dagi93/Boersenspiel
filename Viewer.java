@@ -15,6 +15,7 @@ public class Viewer extends JFrame {
     private JLabel clockLabel;
     private StockPriceProvider provider;
     private Font font = new Font("font", 0, 24);
+    
 
     public class TickerTask extends TimerTask {
         public void run() {
