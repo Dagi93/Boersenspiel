@@ -17,6 +17,7 @@ public class CommandScanner {
 
     public void fillInCommandDesc(CommandDescriptor command) {
 
+        try{
         command.setCommandType(cmd);
         if (command.type.getParamTypes() != null) {
             String s3 = s.substring(cmd.getName().length() + 1);
@@ -42,12 +43,15 @@ public class CommandScanner {
             }
             command.setParams(obs);
         }
+        }catch(Exception e){
+            throw e;
+        }
     }
 
     public CommandTypeInfo searchCommandType(CommandTypeInfo[] cmds, String s) {
 
         for (int index = 0; index < cmds.length; index++) {
-            String s2 = s.substring(0, cmds[index].getName().length());
+            String s2 = s.substring(0, (s.length() > cmds[index].getName().length() ? cmds[index].getName().length():s.length()));
             if (cmds[index].getName().equals(s2)) {
                 return cmds[index];
             }

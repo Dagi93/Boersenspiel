@@ -1,5 +1,5 @@
 package Exceptions;
 
-public class BadInputException {
+public class BadInputException extends Throwable{
 
 }

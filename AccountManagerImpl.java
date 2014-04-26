@@ -25,7 +25,7 @@ public class AccountManagerImpl implements AccountManager {
         }
     }
 
-    public void buy(String playerName, String shareName, int amount) throws NotEnoughException {
+    public void buy(String playerName, String shareName, Integer amount) throws NotEnoughException {
 
         Player bob = search(this.gambler, playerName);
         Share share = provider.search(StockPriceProvider.shareCollection, shareName);
@@ -56,7 +56,7 @@ public class AccountManagerImpl implements AccountManager {
 
     }
 
-    public void sell(String playerName, String shareName, int amount) throws NotEnoughException {
+    public void sell(String playerName, String shareName, Integer amount) throws NotEnoughException {
 
         Player bob = search(this.gambler, playerName);
         Share temp = provider.search(StockPriceProvider.shareCollection, shareName);
