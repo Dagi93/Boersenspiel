@@ -48,7 +48,6 @@ public class AccountManagerImpl implements AccountManager {
                 lastTransaction = new Transaction(bob.name, temp);
             } else {
                 throw new NotEnoughException("Nicht genügend Geld.");
-//                System.out.println(playerName + " besitzt nicht genügend Geld um " + amount + " " + shareName + "-Aktien zu kaufen.");
             }
 
         } else {
@@ -182,4 +181,10 @@ public class AccountManagerImpl implements AccountManager {
         return newPlayerArray;
     }
 
+    public void turnAgentOn(String playerName){
+        Player bob = search(gambler, playerName);
+        PlayerAgent agent = new RandomPlayerAgent(bob, provider);
+        agent.startProcess(this);
+    }
+    
 }

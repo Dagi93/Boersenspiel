@@ -4,6 +4,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.lang.reflect.*;
 
+import CommandShell.CommandDescriptor;
+import CommandShell.CommandScanner;
 import Exceptions.NotEnoughException;
 
 public class StockGameCommandProcessor {
@@ -20,6 +22,7 @@ public class StockGameCommandProcessor {
 
         while (true) { // die Schleife über alle Kommandos, jeweils ein
                        // Durchlauf pro Eingabezeile
+            
             CommandScanner commandScanner = null;
             try {
                 commandScanner = new CommandScanner(StockGameCommandType.values(), shellReader);

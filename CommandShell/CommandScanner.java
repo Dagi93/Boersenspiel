@@ -1,5 +1,8 @@
+package CommandShell;
+
 import java.io.BufferedReader;
 import java.io.IOException;
+
 
 public class CommandScanner {
 
@@ -9,6 +12,7 @@ public class CommandScanner {
 
     public CommandScanner(CommandTypeInfo[] cmds, BufferedReader shellReader) throws Exception {
         this.cmds = cmds;
+        
         s = shellReader.readLine();
 
         try{

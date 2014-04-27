@@ -7,8 +7,9 @@ public class StockGameLauncher {
 
     public static void main(String[] args) throws NotEnoughException, IOException {
         StockPriceProvider provider = new RandomStockPriceProvider();
-        provider.startUpdate();
         AccountManagerImpl accMan = new AccountManagerImpl(provider);
+        
+        provider.startUpdate();
         Viewer view = new Viewer(provider);
         view.start();
         StockGameCommandProcessor processor = new StockGameCommandProcessor(accMan);

@@ -1,3 +1,5 @@
+import CommandShell.CommandTypeInfo;
+
 
 public enum StockGameCommandType implements CommandTypeInfo{
     
@@ -11,6 +13,7 @@ public enum StockGameCommandType implements CommandTypeInfo{
     SHARESVALUE    ("getSharesValueOf", "      <playername>                        * show value of all shares of player ", String.class),
     ALLASSETS      ("getAllAssetsOf", "        <playername>                        * show how rich a player is ", String.class),
     CHECKFORPROFIT ("checkForProfit", "        <playername> <sharename>            * show if it's worth it to sell this kind of share now ", String.class, String.class),
+    AGENTON        ("turnAgentOn", "           <playername>                        * turn on an agent for this player", String.class )
     ;
 
     private String cmd;

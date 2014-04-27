@@ -1,3 +1,4 @@
+package CommandShell;
 
 public interface CommandTypeInfo {
 
