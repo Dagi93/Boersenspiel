@@ -1,18 +1,22 @@
 package boersenspiel;
 import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
 import java.util.logging.Logger;
 
 import exceptions.*;
+import logging.*;
 
 
 public class StockGameLauncher {
+    private static Logger logger = Logger.getLogger(StockGameLauncher.class.getName());
+    
+    public static void main(String[] args) throws Throwable {
 
-    private static Logger logger = Logger.getLogger(AccountManagerImpl.class.getName());
-    public static void main(String[] args) throws NotEnoughException, IOException {
+        logger.info( "Programm gestartet." );
+        
         StockPriceProvider provider = new RandomStockPriceProvider();
         AccountManagerImpl accMan = new AccountManagerImpl(provider);
-
-        logger.info( "Dann mal los." );
         provider.startUpdate();
         Viewer view = new Viewer(provider);
         view.start();
@@ -20,8 +24,8 @@ public class StockGameLauncher {
         try {
             processor.process();
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            System.out.println(e.getCause().getMessage());
+            System.out.println("Das Programm wurde beendet.");
         }
         
         

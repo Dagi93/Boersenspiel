@@ -9,10 +9,9 @@ import exceptions.*;
 public class AccountManagerImpl implements AccountManager {
 
     Player[] gambler = new Player[0];
-    NotEnoughException money = new NotEnoughException();
     Transaction lastTransaction;
     StockPriceProvider provider;
-    private static Logger logger = Logger.getLogger(AccountManagerImpl.class.getName());
+    private static Logger log = Logger.getLogger(AccountManagerImpl.class.getName());
 
     public AccountManagerImpl(StockPriceProvider provider) {
         this.provider = provider;
@@ -26,11 +25,10 @@ public class AccountManagerImpl implements AccountManager {
         } else {
             throw new NameAlreadyTakenException("Dieser Spieler existiert bereits.");
         }
-        logger.log(Level.FINE, "oh oh");
         return "Spieler " + name + " wurde hinzugefügt.";
     }
 
-    public String buy(String playerName, String shareName, int amount) throws NotEnoughException, PlayerNotFoundException {
+    public String buy(String playerName, String shareName, int amount) throws PlayerNotFoundException, NotEnoughMoneyException {
 
         Player bob = search(this.gambler, playerName);
         if (bob == null)
@@ -51,35 +49,35 @@ public class AccountManagerImpl implements AccountManager {
             bob.getCAcc().setValue(-(amount * share.getValue()));
             lastTransaction = new Transaction(bob.name, temp);
         } else {
-            throw new NotEnoughException("Nicht genügend Geld.");
+            throw new NotEnoughMoneyException("Nicht genügend Geld.");
         }
-
-        logger.info("I am trace");
-        logger.log(Level.FINE,"I am trace");
         return "Spieler " + playerName + " hat " + amount + " " + shareName + "-Aktien zum Preis von " + share.getValue() + " gekauft.";
 
     }
 
-    public String sell(String playerName, String shareName, int amount) throws NotEnoughException, PlayerNotFoundException {
+    public String sell(String playerName, String shareName, int amount) throws PlayerNotFoundException, ShareNotFoundException, NotEnoughSharesException, NotEnoughMoneyException{
 
         Player bob = search(this.gambler, playerName);
         Share share = provider.search(StockPriceProvider.shareCollection, shareName);
         ShareItem item = new ShareItem(share, amount);
 
         if (share != null && bob != null) {
-
+            try{
             if (search(bob.getSAcc().collection, share.getName()) != null && search(bob.getSAcc().collection, share.getName()).getSAmount() > amount) {
                 buy(bob.name, share.getName(), -amount);
-            } else if (search(bob.getSAcc().collection, share.getName()) != null
-                    && search(bob.getSAcc().collection, share.getName()).getSAmount() == amount) {
+            } else if (search(bob.getSAcc().collection, share.getName()) != null && search(bob.getSAcc().collection, share.getName()).getSAmount() == amount) {
                 buy(bob.name, share.getName(), -amount);
                 bob.getSAcc().shortenCollection(bob, item);
                 lastTransaction = new Transaction(bob.name, item);
             } else {
-                throw new NotEnoughException("Der Spieler besitzt nicht genügend Aktien.");
+                throw new ShareNotFoundException("Der Spieler besitzt nicht genügend Aktien.");
+            }
+            }catch(NotEnoughMoneyException e){
+                log.log(Level.SEVERE, "NotEnoughMoneyException wurde in sell geworfen, obwohl dies nicht passieren dürfte. ", new NotEnoughMoneyException("Diese Exception wird nicht geworfen."));
             }
 
         } else {
+            log.log(Level.SEVERE, "Spieler- oder Aktienname nicht gefunden.", new NotEnoughMoneyException("Spieler- oder Aktienname nicht gefunden."));
             throw new NullPointerException("Spieler- oder Aktienname nicht gefunden.");
         }
         return "Spieler " + playerName + " hat " + amount + " " + shareName + "-Aktien zum Preis von " + share.getValue() + " verkauft.";
@@ -93,7 +91,7 @@ public class AccountManagerImpl implements AccountManager {
         return "Spieler " + playerName + "'s Kontostand beträgt " + bob.getCAcc().getValue();
     }
 
-    public String getSharesValueOf(String playerName) throws NotEnoughException, PlayerNotFoundException {
+    public String getSharesValueOf(String playerName) throws PlayerNotFoundException {
 
         Player bob = search(gambler, playerName);
         if (bob == null)
@@ -157,7 +155,7 @@ public class AccountManagerImpl implements AccountManager {
         return null;
     }
 
-    public ShareItem search(ShareItem[] collection, String shareName) {
+    public ShareItem search(ShareItem[] collection, String shareName) throws ShareNotFoundException {
 
         if (collection.length > 0) {
             for (int index = 0; index < collection.length; index++) {
@@ -166,7 +164,8 @@ public class AccountManagerImpl implements AccountManager {
                 }
             }
         }
-        throw new NullPointerException("Dieses Aktienpaket befindet sich nicht im Aktiendepot");
+        log.log(Level.SEVERE, "Dieses Aktienpaket befindet sich nicht im Aktiendepot", new ShareNotFoundException("Dieses Aktienpaket befindet sich nicht im Aktiendepot"));
+        throw new ShareNotFoundException("Dieses Aktienpaket befindet sich nicht im Aktiendepot");
     }
 
     public Player[] newPlayerArray(Player[] oldPlayerArray) {

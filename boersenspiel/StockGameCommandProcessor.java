@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.lang.reflect.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import logging.LogHandler;
 import commandShell.CommandDescriptor;
 import commandShell.CommandScanner;
 import exceptions.*;
@@ -14,12 +17,13 @@ public class StockGameCommandProcessor {
     BufferedReader shellReader = new BufferedReader(new InputStreamReader(System.in));
     PrintWriter shellWriter = new PrintWriter(System.out);
     AccountManagerImpl accMan = null;
+    private static Logger log = Logger.getLogger(StockGameCommandProcessor.class.getName());
 
     public StockGameCommandProcessor(AccountManagerImpl accMan) {
         this.accMan = accMan;
     }
 
-    public void process() throws Exception {
+    public void process() throws Throwable {
 
         CommandScanner commandScanner = new CommandScanner(StockGameCommandType.values(), shellReader);
         while (true) { // die Schleife über alle Kommandos, jeweils ein
@@ -55,30 +59,49 @@ public class StockGameCommandProcessor {
             default: {
 
                 try {
-                    Method method = Class.forName("boersenspiel.AccountManagerImpl").getMethod(commandType.getName(), commandType.getParamTypes());
 
-                    Object test = method.invoke(accMan, params);
-                    if(test != null)
-                    System.out.println(test);
+                    ClassLoader loader = accMan.getClass().getClassLoader();  
+                    Class[] interfaces = new Class[] {AccountManager.class};
+                    LogHandler logHandler = new LogHandler(accMan);  
+                    AccountManager stockGameProxy = (AccountManager) Proxy.newProxyInstance(loader, interfaces, logHandler);
+                    Method method = Class.forName("boersenspiel.AccountManagerImpl").getMethod(commandType.getName(), commandType.getParamTypes());
+                    Object test = logHandler.invoke(stockGameProxy, method, params);
+                    
+                    
+                    
+//                    Method method = Class.forName("boersenspiel.AccountManagerImpl").getMethod(commandType.getName(), commandType.getParamTypes());
+//                    Object test = method.invoke(accMan, params);
+//                    Method method = Class.forName("boersenspiel.AccountManagerImpl").getMethod(commandType.getName(), commandType.getParamTypes());
+//                    Object test = method.invoke(stockGameProxy, params);
+
+                    if (test != null){
+                        log.log(Level.FINE, (String) test);
+                        System.out.println(test);
+                    }
 
                 } catch (SecurityException e) {
-                    e.printStackTrace();
+                    log.log(Level.SEVERE, e.getCause().getMessage());
                 } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
+                    log.log(Level.SEVERE, e.getCause().getMessage());
                 } catch (NoSuchMethodException e) {
-                    System.out.println("Den Befehl " + commandType.getName()
-                            + " gibt es nicht. Rufen Sie den Befehl 'help' auf, um alle Befehle anzeigen zu lassen.");
+                    log.log(Level.SEVERE, e.getMessage());
+                    System.out.println(e.getCause().getMessage());
                     continue;
                 } catch (ClassNotFoundException e) {
+                    log.log(Level.SEVERE, e.getCause().getMessage());
                     e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    System.out.println("Einer Ihrer Parameter konnte nicht zugeordnet werden.");
+                } catch (NameAlreadyTakenException e) {
+                    log.log(Level.SEVERE, e.getCause().getMessage());
+                    System.out.println(e.getCause().getMessage());
                 } catch (NullPointerException e) {
-                    System.out.println("Diesen Befehl gibt es nicht.2");
-                    e.printStackTrace();
+                    log.log(Level.SEVERE, e.getCause().getMessage());
+                    System.out.println(e.getCause().getMessage());
+                } catch (InvocationTargetException e){
+                    log.log(Level.SEVERE, e.getCause().getMessage());
+                    System.out.println(e.getCause().getMessage());
+                    
                 }
+                
             }
             }
         }

@@ -23,10 +23,11 @@ public class RandomPlayerAgent implements PlayerAgent {
 
         try {
             impl.buy(bob.name, share, amount);
-        } catch (NotEnoughException e) {
-            System.out.println("Nicht genügend Geld oder Aktien.");
         } catch (PlayerNotFoundException e) {
             System.out.println("Spieler nicht gefunden.");
+        } catch (NotEnoughMoneyException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 
@@ -39,10 +40,17 @@ public class RandomPlayerAgent implements PlayerAgent {
 
             try {
                 impl.sell(bob.name, share, amount);
-            } catch (NotEnoughException e) {
-                System.out.println("Nicht genügend Geld oder Aktien;");
             } catch (PlayerNotFoundException e) {
                 System.out.println("Spieler nicht gefunden.");
+            } catch (ShareNotFoundException e) {
+                System.out.println("Aktie nicht gefunden.");
+                e.printStackTrace();
+            } catch (NotEnoughSharesException e) {
+                System.out.println("Nicht genügend Aktien.");
+                e.printStackTrace();
+            } catch (NotEnoughMoneyException e) {
+                System.out.println("Nicht genügend Geld.");
+                e.printStackTrace();
             }
         }
     }

@@ -5,6 +5,8 @@ import java.util.TimerTask;
 
 
 
+import java.util.logging.Logger;
+
 //import java.util.Timer;
 //import java.util.Calendar;
 //import java.util.Date;
@@ -16,7 +18,7 @@ public class Viewer extends JFrame {
     private JLabel clockLabel;
     private StockPriceProvider provider;
     private Font font = new Font("font", 0, 24);
-    
+    private static Logger log = Logger.getLogger(Viewer.class.getName());
 
     public class TickerTask extends TimerTask {
         public void run() {
