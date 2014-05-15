@@ -1,7 +1,14 @@
 package boersenspiel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ShareDepositAccount extends Asset {
-    ShareItem[] collection = new ShareItem[0];
+    private ShareItem[] collection = new ShareItem[0];
+    
+
+    
+    
 
     public ShareDepositAccount(String name) {
         this.setName(name);

@@ -3,8 +3,8 @@ package commandShell;
 
 public class CommandDescriptor {
     
-    Object[] params;
-    CommandTypeInfo type;
+    private Object[] params;
+    private CommandTypeInfo type;
 
     public Object[] getParams() {
         return params;

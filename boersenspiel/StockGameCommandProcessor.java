@@ -14,13 +14,13 @@ import exceptions.*;
 
 public class StockGameCommandProcessor {
 
-    BufferedReader shellReader = new BufferedReader(new InputStreamReader(System.in));
-    PrintWriter shellWriter = new PrintWriter(System.out);
-    AccountManagerImpl accMan = null;
+    private BufferedReader shellReader = new BufferedReader(new InputStreamReader(System.in));
+    private PrintWriter shellWriter = new PrintWriter(System.out);
+    private AccountManager accMan = null;
     private static Logger log = Logger.getLogger(StockGameCommandProcessor.class.getName());
 
-    public StockGameCommandProcessor(AccountManagerImpl accMan) {
-        this.accMan = accMan;
+    public StockGameCommandProcessor(AccountManager accMan2) {
+        this.accMan = accMan2;
     }
 
     public void process() throws Throwable {
@@ -60,19 +60,8 @@ public class StockGameCommandProcessor {
 
                 try {
 
-                    ClassLoader loader = accMan.getClass().getClassLoader();  
-                    Class[] interfaces = new Class[] {AccountManager.class};
-                    LogHandler logHandler = new LogHandler(accMan);  
-                    AccountManager stockGameProxy = (AccountManager) Proxy.newProxyInstance(loader, interfaces, logHandler);
-                    Method method = Class.forName("boersenspiel.AccountManagerImpl").getMethod(commandType.getName(), commandType.getParamTypes());
-                    Object test = logHandler.invoke(stockGameProxy, method, params);
-                    
-                    
-                    
-//                    Method method = Class.forName("boersenspiel.AccountManagerImpl").getMethod(commandType.getName(), commandType.getParamTypes());
-//                    Object test = method.invoke(accMan, params);
-//                    Method method = Class.forName("boersenspiel.AccountManagerImpl").getMethod(commandType.getName(), commandType.getParamTypes());
-//                    Object test = method.invoke(stockGameProxy, params);
+                    Method method = accMan.getClass().getMethod(commandType.getName(), commandType.getParamTypes());
+                    Object test = method.invoke(accMan, params);
 
                     if (test != null){
                         log.log(Level.FINE, (String) test);
@@ -87,9 +76,6 @@ public class StockGameCommandProcessor {
                     log.log(Level.SEVERE, e.getMessage());
                     System.out.println(e.getCause().getMessage());
                     continue;
-                } catch (ClassNotFoundException e) {
-                    log.log(Level.SEVERE, e.getCause().getMessage());
-                    e.printStackTrace();
                 } catch (NameAlreadyTakenException e) {
                     log.log(Level.SEVERE, e.getCause().getMessage());
                     System.out.println(e.getCause().getMessage());

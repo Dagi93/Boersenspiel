@@ -7,10 +7,10 @@ import exceptions.*;
 
 public class CommandScanner {
 
-    CommandTypeInfo[] cmds;
-    CommandTypeInfo cmd;
-    BufferedReader shellReader;
-    String s;
+    private CommandTypeInfo[] cmds;
+    private CommandTypeInfo cmd;
+    private BufferedReader shellReader;
+    private String s;
 
     public CommandScanner(CommandTypeInfo[] cmds, BufferedReader shellReader) throws Exception {
         this.cmds = cmds;
@@ -37,7 +37,7 @@ public class CommandScanner {
             throw new BadInputException("Diesen Befehl gibt es nicht.");
         }
 
-        if (command.type.getParamTypes() != null) {
+        if (command.getCommandType().getParamTypes() != null) {
             String s3 = s.substring(cmd.getName().length() + 1);
             String[] sa = s3.split(" ");
             Object[] obs = new Object[cmd.getParamTypes().length];

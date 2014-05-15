@@ -6,8 +6,8 @@ import exceptions.*;
 
 public class RandomPlayerAgent implements PlayerAgent {
 
-    Player bob;
-    StockPriceProvider provider;
+    private Player bob;
+    private StockPriceProvider provider;
 
     public RandomPlayerAgent(Player bob, StockPriceProvider provider) {
         this.bob = bob;
@@ -22,7 +22,7 @@ public class RandomPlayerAgent implements PlayerAgent {
         int amount = (int) (Math.random() * 30) + 1;
 
         try {
-            impl.buy(bob.name, share, amount);
+            impl.buy(bob.getName(), share, amount);
         } catch (PlayerNotFoundException e) {
             System.out.println("Spieler nicht gefunden.");
         } catch (NotEnoughMoneyException e) {
@@ -33,13 +33,13 @@ public class RandomPlayerAgent implements PlayerAgent {
 
     @Override
     public void sell(AccountManagerImpl impl){
-        if (bob.getSAcc().collection.length > 0) {
-            int sharePosition = (int) (Math.random() * bob.getSAcc().collection.length);
-            String share = bob.getSAcc().collection[sharePosition].getName();
-            int amount = (int) (Math.random() * bob.getSAcc().collection[sharePosition].getSAmount()) + 1;
+        if (bob.getSAcc().getCollection().length > 0) {
+            int sharePosition = (int) (Math.random() * bob.getSAcc().getCollection().length);
+            String share = bob.getSAcc().getCollection()[sharePosition].getName();
+            int amount = (int) (Math.random() * bob.getSAcc().getCollection()[sharePosition].getSAmount()) + 1;
 
             try {
-                impl.sell(bob.name, share, amount);
+                impl.sell(bob.getName(), share, amount);
             } catch (PlayerNotFoundException e) {
                 System.out.println("Spieler nicht gefunden.");
             } catch (ShareNotFoundException e) {

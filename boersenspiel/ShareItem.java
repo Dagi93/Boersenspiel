@@ -26,14 +26,6 @@ public class ShareItem extends Asset {
 		return "Name: " + this.getName() + ", Menge: " + this.getSAmount() + ", Gesamtwert: " + (double)this.getValue()/100 + "€.";
 	}
 
-    public long getPurchaseValue() {
-        return purchaseValue;
-    }
-
-    public void setPurchaseValue(long purchaseValue) {
-        this.purchaseValue = purchaseValue;
-    }
-
 	
 	
 }
